@@ -1,0 +1,825 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Dream — eighty stories high</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #16110d;
+    --paper: #faf6ef;
+    --sepia: #c8a97a;
+    --rust: #a93c15;
+    --warm-grey: #8a7560;
+    --dust: #e8dfd0;
+    --mist: #f3ede3;
+    
+    --wa-dark: #075e54;
+    --wa-light: #128c7e;
+    --wa-bg: #e5ddd5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @media print {
+    body { background: white; }
+    .print-btn { display: none !important; }
+    .page { box-shadow: none !important; margin: 0 !important; }
+    @page { margin: 0; size: A4; }
+  }
+
+  body {
+    background: #251b12;
+    font-family: 'EB Garamond', Georgia, serif;
+    color: var(--ink);
+    line-height: 1.85;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    background: var(--rust); color: #fff; border: none;
+    padding: 12px 22px; font-family: 'EB Garamond', serif;
+    font-size: 15px; letter-spacing: 0.05em; cursor: pointer;
+    border-radius: 2px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    transition: background 0.2s;
+  }
+  .print-btn:hover { background: #8c2f0f; }
+
+  /* CONTAINER WRAPPER (480px mobile-first) */
+  .wrapper { max-width: 480px; margin: 0 auto; padding: 0 0 60px 0; }
+
+  /* COVER (Light Elegant Layout - No heavy bands) */
+  .cover {
+    background: var(--paper);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 60px 32px; text-align: center;
+    border-bottom: 1px solid var(--dust);
+  }
+  .cover::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(200,169,122,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cover-illustration { width: 100%; max-width: 380px; margin-bottom: 40px; }
+  .cover-tag { font-family: 'EB Garamond', serif; font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--rust); margin-bottom: 20px; opacity: 0.85; }
+  .cover-title { font-family: 'Playfair Display', serif; font-size: clamp(38px,9.5vw,60px); font-weight: 700; color: var(--ink); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .cover-subtitle { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; color: var(--warm-grey); margin-bottom: 32px; letter-spacing: 0.02em; }
+  .cover-hook { font-family: 'Playfair Display', serif; font-size: 16px; font-style: italic; color: var(--rust); margin-bottom: 32px; letter-spacing: 0.02em; opacity: 0.95; font-weight: 500; line-height: 1.5; padding: 0 10px; }
+  .cover-divider { width: 48px; height: 1px; background: var(--rust); margin: 0 auto 32px; opacity: 0.5; }
+  .cover-epigraph { font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--warm-grey); max-width: 280px; line-height: 1.7; letter-spacing: 0.01em; }
+
+  /* PAGES (Sheets of paper) */
+  .page { background: var(--paper); margin: 0; padding: 52px 32px 56px; position: relative; }
+  .page + .page { border-top: 1px solid var(--dust); }
+
+  /* CHAPTER STYLING */
+  .chapter-head { margin-bottom: 36px; }
+  .chapter-num { font-family: 'EB Garamond', serif; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--rust); margin-bottom: 10px; opacity: 0.8; }
+  .chapter-title { font-family: 'Playfair Display', serif; font-size: clamp(22px,5vw,28px); font-weight: 500; color: var(--ink); line-height: 1.25; }
+  .chapter-rule { margin-top: 18px; width: 36px; height: 2px; background: var(--rust); opacity: 0.7; }
+
+  /* TYPOGRAPHY */
+  p { font-size: clamp(16px,4vw,18px); line-height: 1.85; color: #1e140a; margin-bottom: 20px; text-align: justify; hyphens: auto; }
+  p:first-of-type::first-letter { font-family: 'Playfair Display', serif; font-size: 4.2em; line-height: 0.72; float: left; margin: 0.06em 0.1em 0 0; color: var(--rust); font-weight: 700; }
+  .no-dropcap p:first-of-type::first-letter { font-size: inherit; line-height: inherit; float: none; margin: 0; color: inherit; font-weight: inherit; }
+
+  .section-marker { text-align: center; margin: 44px 0; display: flex; align-items: center; gap: 16px; }
+  .section-marker::before, .section-marker::after { content: ''; flex: 1; height: 1px; background: var(--sepia); opacity: 0.35; }
+  .section-marker span { font-family: 'EB Garamond', serif; font-style: italic; color: var(--sepia); font-size: 18px; letter-spacing: 0.1em; opacity: 0.7; }
+
+  .pull-quote { border-left: 3px solid var(--rust); margin: 36px 0 36px 8px; padding: 4px 0 4px 24px; font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(17px,4.5vw,21px); line-height: 1.55; color: var(--rust); opacity: 0.9; }
+  .pull-quote::first-letter { font-size: inherit; float: none; color: inherit; font-weight: inherit; margin: 0; line-height: inherit; }
+
+  .scene-art { width: 100%; margin: 36px 0; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid var(--dust); }
+
+  .page-footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--dust); display: flex; justify-content: space-between; align-items: center; }
+  .page-footer span { font-family: 'EB Garamond', serif; font-size: 12px; color: var(--warm-grey); letter-spacing: 0.08em; opacity: 0.6; }
+
+  /* SELECTIVE DARK CHAPTER FOR EMOTIONAL ALTITUDE (CHAPTER IV) */
+  .page.page-dark {
+    background: var(--ink) !important;
+    color: var(--paper) !important;
+    border-top: 1px solid #221c18 !important;
+  }
+  .page.page-dark p {
+    color: #e2dfda !important;
+  }
+  .page.page-dark .chapter-title {
+    color: var(--paper) !important;
+  }
+  .page.page-dark .page-footer span {
+    color: var(--sepia) !important;
+  }
+  .page.page-dark .section-marker::before, .page.page-dark .section-marker::after {
+    background: var(--sepia) !important;
+  }
+  .page.page-dark .section-marker span {
+    color: var(--sepia) !important;
+  }
+
+  /* EPILOGUE (Full-dark immersive night block) */
+  .epilogue { background: var(--ink); color: var(--paper); margin: 0; padding: 60px 32px 72px; position: relative; overflow: hidden; }
+  .epilogue::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 60%, rgba(169,60,21,0.15) 0%, transparent 70%); pointer-events: none; }
+  .epilogue p { color: rgba(250,246,239,0.75); font-style: italic; text-align: justify; font-size: clamp(15px,3.8vw,17px); }
+  .epilogue p::first-letter { font-size: inherit; float: none; color: inherit; font-weight: inherit; margin: 0; line-height: inherit; }
+  .epilogue .epi-title { font-family: 'Playfair Display', serif; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--sepia); text-align: center; margin-bottom: 28px; opacity: 0.7; }
+  .epilogue .epi-close { text-align: center; margin-top: 48px; font-family: 'Playfair Display', serif; font-size: clamp(28px,7vw,40px); color: var(--sepia); opacity: 0.5; letter-spacing: 0.05em; }
+
+  /* GLOSSARY */
+  .glossary-item { margin-bottom: 32px; border-bottom: 1px dashed var(--dust); padding-bottom: 24px; }
+  .glossary-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .glossary-term { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--rust); margin-bottom: 6px; }
+  .glossary-subtitle { font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--warm-grey); margin-bottom: 12px; display: block; }
+  .glossary-definition { font-size: 16px; line-height: 1.7; color: var(--ink); }
+
+  /* REAL WHATSAPP INTERFACE */
+  .whatsapp-window {
+    background: var(--wa-bg);
+    border: 1px solid var(--dust);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 28px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .whatsapp-header {
+    background: var(--wa-dark);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .wa-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--wa-light);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .wa-meta {
+    font-family: 'Karla', sans-serif;
+    color: #fff;
+  }
+  .wa-name { font-size: 13px; font-weight: 600; }
+  .wa-status { font-size: 10px; opacity: 0.8; }
+  
+  .whatsapp-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .wa-bubble {
+    max-width: 82%;
+    padding: 6px 10px 4px;
+    border-radius: 6px;
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+  }
+  .wa-bubble.sent {
+    background: #dcf8c6;
+    align-self: flex-end;
+    border-top-right-radius: 0;
+  }
+  .wa-bubble.received {
+    background: #ffffff;
+    align-self: flex-start;
+    border-top-left-radius: 0;
+  }
+  .wa-trans {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-style: italic;
+    color: var(--warm-grey);
+    font-size: 12px;
+    margin-top: 2px;
+    line-height: 1.3;
+    display: block;
+  }
+  .wa-media-preview {
+    margin-bottom: 4px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .wa-time {
+    display: block;
+    text-align: right;
+    font-size: 9px;
+    color: var(--warm-grey);
+    margin-top: 3px;
+  }
+  .wa-ticks {
+    color: #34b7f1;
+    margin-left: 2px;
+    font-weight: bold;
+  }
+
+  /* TRANSACTION LEDGER */
+  .transfer-card {
+    background: var(--mist);
+    border-left: 3px solid var(--rust);
+    padding: 14px;
+    margin: 28px 0;
+    border-radius: 2px;
+  }
+  .transfer-title {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    margin-bottom: 8px;
+  }
+  .transfer-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--dust);
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+  }
+  .transfer-row:last-child { border-bottom: none; }
+  .transfer-val { font-weight: 600; color: #2e5c30; }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">Save as PDF ↓</button>
+
+<div class="wrapper">
+
+<!-- ══════════ COVER (ELEGANT LIGHT DESIGN - No heavy bands) ══════════ -->
+<div class="cover">
+  <!--
+    COVER: Towering building structure Sunset.
+    Responsive, light-themed vector illustration of a massive skeletal tower.
+    Uses delicate thin vector lines instead of thick dark blocks.
+  -->
+  <svg class="cover-illustration" viewBox="0 0 380 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; display: block;">
+    <defs>
+      <!-- Soft Sunset glow inside a light-cream backdrop -->
+      <radialGradient id="light-sunset-glow" cx="50%" cy="60%" r="60%">
+        <stop offset="0%" stop-color="#fdf4e8"/>
+        <stop offset="50%" stop-color="#f8e7d2"/>
+        <stop offset="100%" stop-color="#faf6ef"/>
+      </radialGradient>
+      <!-- Delicate golden/orange rebar specular light beams -->
+      <linearGradient id="warm-rays" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#e3955d" stop-opacity="0.25"/>
+        <stop offset="60%" stop-color="#cc7c45" stop-opacity="0.08"/>
+        <stop offset="100%" stop-color="#cc7c45" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    
+    <!-- Light-themed Sunset Backing -->
+    <rect width="380" height="260" fill="url(#light-sunset-glow)"/>
+    
+    <!-- Delicate warm rays -->
+    <polygon points="0,0 240,0 320,180 0,220" fill="url(#warm-rays)"/>
+    <polygon points="0,40 180,0 350,240 40,260" fill="url(#warm-rays)" opacity="0.6"/>
+
+    <!-- Fine silhouetted context structures -->
+    <rect x="0" y="150" width="30" height="110" fill="#a93c15" opacity="0.1"/>
+    <rect x="345" y="140" width="35" height="120" fill="#a93c15" opacity="0.1"/>
+
+    <!-- High-rise skeletal outline (Fine ink-pen style) -->
+    <rect x="10" y="50" width="95" height="210" fill="#f5ede3" stroke="#8a7560" stroke-width="0.8"/>
+    
+    <!-- Fine grid work of scaffolding -->
+    <g stroke="#c8a97a" stroke-width="0.5" opacity="0.5">
+      <line x1="10" y1="80" x2="105" y2="80"/>
+      <line x1="10" y1="110" x2="105" y2="110"/>
+      <line x1="10" y1="140" x2="105" y2="140"/>
+      <line x1="10" y1="170" x2="105" y2="170"/>
+      <line x1="10" y1="200" x2="105" y2="200"/>
+      <line x1="10" y1="230" x2="105" y2="230"/>
+      <line x1="30" y1="50" x2="30" y2="260"/>
+      <line x1="55" y1="50" x2="55" y2="260"/>
+      <line x1="80" y1="50" x2="80" y2="260"/>
+    </g>
+    
+    <!-- Slender, glinting rebars at the top -->
+    <g stroke="#a93c15" stroke-width="1.2" opacity="0.8">
+      <line x1="20" y1="50" x2="22" y2="30"/>
+      <line x1="42" y1="50" x2="40" y2="22"/>
+      <line x1="65" y1="50" x2="67" y2="26"/>
+      <line x1="88" y1="50" x2="86" y2="28"/>
+    </g>
+
+    <!-- Glowing warning lamps (sodium warm dots) -->
+    <circle cx="30" cy="110" r="14" fill="#a93c15" opacity="0.12"/>
+    <circle cx="30" cy="110" r="3" fill="#a93c15"/>
+
+    <circle cx="80" cy="170" r="14" fill="#a93c15" opacity="0.12"/>
+    <circle cx="80" cy="170" r="3" fill="#a93c15"/>
+
+    <!-- Slender, elegant crane lines -->
+    <line x1="175" y1="35" x2="175" y2="260" stroke="#8a7560" stroke-width="1.2"/>
+    <line x1="175" y1="50" x2="340" y2="50" stroke="#8a7560" stroke-width="1"/>
+    <line x1="175" y1="50" x2="140" y2="50" stroke="#8a7560" stroke-width="1"/>
+    <!-- Diagonals on crane -->
+    <g stroke="#8a7560" stroke-width="0.5" opacity="0.6">
+      <line x1="175" y1="70" x2="185" y2="90"/>
+      <line x1="175" y1="110" x2="185" y2="130"/>
+      <line x1="175" y1="150" x2="185" y2="170"/>
+    </g>
+
+    <!-- Ground baseline -->
+    <rect x="0" y="255" width="380" height="5" fill="#8a7560" opacity="0.3"/>
+  </svg>
+
+  <p class="cover-tag">A Mumbai Story</p>
+  <h1 class="cover-title">The Dream</h1>
+  <p class="cover-subtitle">eighty stories high</p>
+  <p class="cover-hook">He built their dream eighty stories high, only to find the sky is a lonely place to land.</p>
+  <div class="cover-divider"></div>
+  <p class="cover-epigraph">Mumbai builds its grandest dreams using the toil of those who belong to other lands. It lifts you higher and higher, until you are so high that you can no longer touch the ground you left behind.</p>
+</div>
+
+<!-- ══════════ SECTION 1 (LIGHT PAPER) ══════════ -->
+<div class="page">
+  <div class="chapter-head">
+    <p class="chapter-num">I</p>
+    <h2 class="chapter-title">The Ground Floor</h2>
+    <div class="chapter-rule"></div>
+  </div>
+
+  <p>Vishal’s day always started with the smell of wet cement and cold tea.</p>
+
+  <p>He lived in a tiny room with a tin roof behind the railway tracks. At night, when the local trains rushed past, his metal plate would rattle on the floor. He had left his village in Bihar twelve months ago, leaving his wife, Radha, behind. He still remembered her face at the dusty bus stop, wiping her eyes with the corner of her blue saree.</p>
+
+  <p class="dialogue">"Jao," <span class="no-dropcap">she had whispered, holding his calloused hand.</span> "Hamaari zindagi banana. Main intezaar karungi."</p>
+
+  <p>Unlike earlier times, Radha had a basic smartphone now. Vishal had bought it for her second-hand before leaving. Even though she had a direct connection, sending money remained traditional. Since she did not have a bank account, Vishal transferred his monthly savings directly to Ramesh bhaiya, her older brother, who managed the family accounts in the nearby market town.</p>
+
+  <!-- TRANSACTION LEDGER (Chronological baseline savings) -->
+  <div class="transfer-card">
+    <div class="transfer-title">Monthly Savings Transfer — Ramesh Bhaiya's Account</div>
+    <div class="transfer-row">
+      <span>May Savings</span>
+      <span class="transfer-val">₹4,200</span>
+    </div>
+    <div class="transfer-row">
+      <span>June Savings</span>
+      <span class="transfer-val">₹4,200</span>
+    </div>
+    <div class="transfer-row">
+      <span>July Savings</span>
+      <span class="transfer-val">₹4,200</span>
+    </div>
+  </div>
+
+  <p>But the calls and texts belonged entirely to them. Every evening, once the noise of the hydraulic concrete mixers died down, Vishal would sit on a stack of timber and open WhatsApp. Radha would be waiting.</p>
+
+  <!-- DIRECT WHATSAPP CHAT (CHAPTER I) -->
+  <div class="whatsapp-window">
+    <div class="whatsapp-header">
+      <div class="wa-avatar">R</div>
+      <div class="wa-meta">
+        <div class="wa-name">Radha ❤️</div>
+        <div class="wa-status">online</div>
+      </div>
+    </div>
+    <div class="whatsapp-body">
+      <div class="wa-bubble sent">
+        Yahan building aasman tak pahunch rahi hai, Radha. Ek din tumhein dikhaaunga.
+        <span class="wa-trans">The building here is reaching the sky, Radha. One day I will show you.</span>
+        <span class="wa-time">8:12 PM <span class="wa-ticks">✓✓</span></span>
+      </div>
+      <div class="wa-bubble received">
+        Khaana kha liya? Humne Ramesh bhaiya se poochha tha, unhone kaha paisa kal mil gaya tha bank mein.
+        <span class="wa-trans">Did you eat? I asked Ramesh bhaiya, he said the money reached the bank yesterday.</span>
+        <span class="wa-time">8:14 PM</span>
+      </div>
+      <div class="wa-bubble sent">
+        Haan, kha liya. Tum apna khayal rakho bas. Jaldi hi bulaaunga tumhein yahan.
+        <span class="wa-trans">Yes, I ate. You just take care of yourself. I will call you here very soon.</span>
+        <span class="wa-time">8:15 PM <span class="wa-ticks">✓✓</span></span>
+      </div>
+    </div>
+  </div>
+
+  <p>His words on Radha’s screen were the only bridge to the home he had left behind. In a city of millions, he was building luxury homes for strangers while holding his own life together on a shared plan.</p>
+
+  <div class="page-footer">
+    <span>The Dream</span>
+    <span>I</span>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 2 (LIGHT PAPER) ══════════ -->
+<div class="page no-dropcap">
+  <div class="chapter-head">
+    <p class="chapter-num">II</p>
+    <h2 class="chapter-title">The Elevator Shaft</h2>
+    <div class="chapter-rule"></div>
+  </div>
+
+  <p>Six months later, the project supervisor noticed Vishal. He did not complain, and he worked faster than the others. They made him the operator of the high-speed material hoist—the open metal lift that carried concrete, glass, and iron up to the eighty-first floor.</p>
+
+  <p>It was a promotion. It meant more money, but it also meant he was no longer touching the earth.</p>
+
+  <p>Every morning, Vishal would step into the shaking metal cage. He would pull the heavy iron lever, and the lift would go up into the sky. The wind would scream through the steel bars. The noise of the street traffic would grow faint, and then disappear. The people below would look like tiny, crawling ants.</p>
+
+  <!-- TRANSACTION LEDGER (Showing savings *after* his hoist operator promotion) -->
+  <div class="transfer-card">
+    <div class="transfer-title">Updated Savings Transfer — Ramesh Bhaiya's Account</div>
+    <div class="transfer-row">
+      <span>November Savings <span style="font-size: 11px; opacity: 0.8;">(Hoist operator promotion)</span></span>
+      <span class="transfer-val">₹4,800</span>
+    </div>
+    <div class="transfer-row">
+      <span>December Savings</span>
+      <span class="transfer-val">₹4,800</span>
+    </div>
+    <div class="transfer-row">
+      <span>January Savings</span>
+      <span class="transfer-val">₹4,800</span>
+    </div>
+  </div>
+
+  <div class="section-marker"><span>—</span></div>
+
+  <p>He spent his days in the sky, suspended between the clouds and the city. It was cold up there, even in the summer. When the monsoon arrived, the heavy gray clouds would wrap around the half-built building, hiding it completely from the world below.</p>
+
+  <p>When he sent her a video of the view from the seventy-fifth floor, Radha spent half an hour trying to download it on her phone. When it finally loaded, she texted him back immediately, her messages filled with worry. In her heart, the giant height felt terrifying.</p>
+
+  <!-- DIRECT WHATSAPP CHAT (Radha never uses his direct name) -->
+  <div class="whatsapp-window">
+    <div class="whatsapp-header">
+      <div class="wa-avatar">R</div>
+      <div class="wa-meta">
+        <div class="wa-name">Radha ❤️</div>
+        <div class="wa-status">online</div>
+      </div>
+    </div>
+    <div class="whatsapp-body">
+      <div class="wa-bubble received">
+        Assi manzil? Humne video dekha, humein darr lag raha hai ji. Sach mein safe hai kya? Wapas aa jao.
+        <span class="wa-trans">Eighty floors? I saw the video, I'm scared, ji. Is it really safe? Come back.</span>
+        <span class="wa-time">6:42 PM</span>
+      </div>
+      <div class="wa-bubble sent">
+        Bilkul safe hai. Majboot harness baandha rehta hai. Is se paise bhi zyaada milte hain — ghar ki deewarein jaldi banengi.
+        <span class="wa-trans">Completely safe. I wear a strong safety harness. This pays more too — our house walls will get built faster.</span>
+        <span class="wa-time">6:45 PM <span class="wa-ticks">✓✓</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG II: Hoist Shaft perspective with realistic lighting effects -->
+  <div class="scene-art">
+    <svg viewBox="0 0 640 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; display: block;">
+      <defs>
+        <radialGradient id="shaft-exit" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#a0bacd"/>
+          <stop offset="55%" stop-color="#3b5870"/>
+          <stop offset="100%" stop-color="#0b1116"/>
+        </radialGradient>
+        <!-- Volumetric shaft light cone -->
+        <linearGradient id="volumetric-cone" x1="50%" y1="0%" x2="50%" y2="100%">
+          <stop offset="0%" stop-color="#fff" stop-opacity="0.18"/>
+          <stop offset="50%" stop-color="#a0bacd" stop-opacity="0.04"/>
+          <stop offset="100%" stop-color="#a0bacd" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- Lift shaft wall texture -->
+      <rect width="640" height="320" fill="#040302"/>
+      <polygon points="0,0 220,100 220,320 0,320" fill="#140f0c"/>
+      <polygon points="640,0 420,100 420,320 640,320" fill="#140f0c"/>
+      
+      <!-- Volumetric Light Beam spilling down -->
+      <polygon points="220,0 420,0 480,320 160,320" fill="url(#volumetric-cone)"/>
+
+      <!-- Perspective Joint Lines -->
+      <g stroke="#261b14" stroke-width="0.8" opacity="0.65">
+        <line x1="0" y1="60" x2="220" y2="130"/>
+        <line x1="0" y1="140" x2="220" y2="160"/>
+        <line x1="0" y1="220" x2="220" y2="190"/>
+        <line x1="640" y1="60" x2="420" y2="130"/>
+        <line x1="640" y1="140" x2="420" y2="160"/>
+        <line x1="640" y1="220" x2="420" y2="190"/>
+      </g>
+      <g stroke="#8a7560" stroke-width="0.3" opacity="0.2">
+        <line x1="0" y1="61" x2="220" y2="131"/>
+        <line x1="640" y1="61" x2="420" y2="131"/>
+      </g>
+
+      <!-- Exit to Sky -->
+      <rect x="220" y="0" width="200" height="100" fill="url(#shaft-exit)"/>
+      <ellipse cx="320" cy="40" rx="80" ry="25" fill="#9bc0d4" opacity="0.15"/>
+
+      <!-- Lift platform with edge rim speculars -->
+      <rect x="245" y="180" width="150" height="6" fill="#1c130e" rx="1"/>
+      <line x1="245" y1="180" x2="395" y2="180" stroke="#faf6ef" stroke-width="0.5" opacity="0.4"/>
+      
+      <rect x="245" y="130" width="4" height="50" fill="#140f0b"/>
+      <rect x="391" y="130" width="4" height="50" fill="#140f0b"/>
+      <rect x="245" y="130" width="150" height="4" fill="#140f0b"/>
+      
+      <!-- Mesh structure of the cage -->
+      <g stroke="#211812" stroke-width="0.8" opacity="0.55">
+        <line x1="255" y1="134" x2="255" y2="176"/>
+        <line x1="275" y1="134" x2="275" y2="176"/>
+        <line x1="295" y1="134" x2="295" y2="176"/>
+        <line x1="315" y1="134" x2="315" y2="176"/>
+        <line x1="335" y1="134" x2="335" y2="176"/>
+        <line x1="355" y1="134" x2="355" y2="176"/>
+        <line x1="375" y1="134" x2="375" y2="176"/>
+        <line x1="245" y1="145" x2="395" y2="145"/>
+        <line x1="245" y1="160" x2="395" y2="160"/>
+      </g>
+
+      <!-- Cables showing glinting highlights -->
+      <line x1="290" y1="0" x2="290" y2="130" stroke="#bda078" stroke-width="1.2" opacity="0.6"/>
+      <line x1="290" y1="0" x2="290" y2="130" stroke="#fff" stroke-width="0.5" opacity="0.3"/>
+      <line x1="350" y1="0" x2="350" y2="130" stroke="#bda078" stroke-width="1.2" opacity="0.6"/>
+      <line x1="350" y1="0" x2="350" y2="130" stroke="#fff" stroke-width="0.5" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <p>He was closer to the sky than anyone in his village had ever been, but his heart remained firmly on the mud floor of Radha's home. He had lied about the safety harness—the rope was old, and he had retied the frayed harness-knot himself, without saying a word to the supervisor.</p>
+
+  <div class="page-footer">
+    <span>The Dream</span>
+    <span>II</span>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 3 (LIGHT PAPER) ══════════ -->
+<div class="page no-dropcap">
+  <div class="chapter-head">
+    <p class="chapter-num">III</p>
+    <h2 class="chapter-title">The Golden Ticket</h2>
+    <div class="chapter-rule"></div>
+  </div>
+
+  <p>The developer announced that the tower was complete. The eighty-story luxury building was ready for the wealthy owners to move in.</p>
+
+  <p>Because Vishal had been the most reliable worker, the company did something rare. They gave him a permanent job as the head maintenance operator. He would get a regular salary, a small room in the basement of the complex, and a permanent contract. He had finally made it big.</p>
+
+  <p>The first thing Vishal did was book an official **IRCTC e-ticket** online for Radha's journey. He saved the digital PDF on his phone and sent it directly to Radha's WhatsApp. This official digital ticket was all she needed to safely pass the train ticket examiners. To make absolutely sure he didn't miss her on arrival, Vishal also printed out a simple **single-page paper copy of her e-ticket receipt** to carry in his own pocket, showing her exact coach and seat number.</p>
+
+  <!-- DIRECT WHATSAPP CHAT WITH TICKET INLINE (Completely logical 2026 flow) -->
+  <div class="whatsapp-window">
+    <div class="whatsapp-header">
+      <div class="wa-avatar">R</div>
+      <div class="wa-meta">
+        <div class="wa-name">Radha ❤️</div>
+        <div class="wa-status">online</div>
+      </div>
+    </div>
+    <div class="whatsapp-body">
+      <div class="wa-msg sent">
+        <div class="wa-media-preview">
+          <!-- Live render of the digital PDF ticket receipt -->
+          <svg viewBox="0 0 180 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; display:block; background:#ffffff;">
+            <rect width="180" height="100" fill="#ffffff" stroke="#c0c0c0" stroke-width="0.8"/>
+            <rect x="10" y="10" width="160" height="15" fill="#f2f2f2"/>
+            <text x="15" y="20" font-family="Arial" font-size="6" fill="#16110d" font-weight="bold">IRCTC E-TICKET RECEIPT</text>
+            <rect x="15" y="32" width="150" height="1" fill="#c0c0c0"/>
+            <text x="15" y="45" font-family="Arial" font-size="5" fill="#8a7560">PASSENGER: RADHA DEVI</text>
+            <text x="15" y="55" font-family="Arial" font-size="5" fill="#8a7560">COACH: S4 / SEAT: 36</text>
+            <text x="15" y="65" font-family="Arial" font-size="5" fill="#8a7560">TRAIN: PATNA - MUMBAI EXPRES</text>
+            <rect x="15" y="75" width="60" height="15" fill="#e5ddd5" opacity="0.5"/>
+            <!-- Micro QR code pattern -->
+            <rect x="20" y="78" width="3" height="3" fill="#000"/><rect x="25" y="78" width="3" height="3" fill="#000"/>
+            <rect x="20" y="83" width="3" height="3" fill="#000"/><rect x="25" y="83" width="6" height="3" fill="#000"/>
+          </svg>
+        </div>
+        Radha — ticket book kar liya hai. WhatsApp par PDF bhej diya hai. Apne mobile mein ticket TTE babu ko dikha dena. Ramesh bhaiya tumhein Patna station chhod denge, aur main CST par milunga.
+        <span class="wa-trans">Radha — I have booked the ticket. Sent the PDF on WhatsApp. Show the ticket on your mobile to the TTE. Ramesh bhaiya will drop you off at Patna station on Tuesday morning, and I will meet you at CST.</span>
+        <span class="wa-time">10:45 AM <span class="wa-ticks">✓✓</span></span>
+      </div>
+      <div class="wa-bubble received">
+        Humne ticket dekh li ji! Hum sachi mein Mumbai aa rahe hain? Hum abhi se kapde aur samaan suitcase mein bhar rahe hain.
+        <span class="wa-trans">I saw the ticket, ji! Are we really coming to Mumbai? I am filling my clothes and belongings in the suitcase right now.</span>
+        <span class="wa-time">10:48 AM</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG III: Folded printed paper receipt on wood plank with high fidelity highlights -->
+  <div class="scene-art">
+    <svg viewBox="0 0 640 270" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; display: block;">
+      <defs>
+        <linearGradient id="wood-base" x1="0%" y1="0%" x2="1" y2="1">
+          <stop offset="0%" stop-color="#301e15"/>
+          <stop offset="50%" stop-color="#1c110b"/>
+          <stop offset="100%" stop-color="#100a06"/>
+        </linearGradient>
+        <linearGradient id="ticket-paper" x1="0%" y1="0%" x2="0%" y2="1">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#f0f2f5"/>
+        </linearGradient>
+        <!-- Highlight glare on paper surface -->
+        <linearGradient id="glare-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fff" stop-opacity="0.35"/>
+          <stop offset="30%" stop-color="#fff" stop-opacity="0.1"/>
+          <stop offset="70%" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- Wooden Board -->
+      <rect width="640" height="270" fill="url(#wood-base)"/>
+      <g stroke="#080503" stroke-width="1.2" opacity="0.5">
+        <line x1="0" y1="60" x2="640" y2="60"/>
+        <line x1="0" y1="130" x2="640" y2="130"/>
+        <line x1="0" y1="200" x2="640" y2="200"/>
+      </g>
+      
+      <!-- The folded A4 booking receipt with shadows and glare -->
+      <g transform="translate(170, 40) rotate(-1.5)">
+        <!-- Drop Shadow -->
+        <rect x="4" y="6" width="280" height="160" rx="2" fill="#000" opacity="0.45"/>
+        
+        <!-- A4 Page representation -->
+        <rect width="280" height="160" rx="2" fill="url(#ticket-paper)"/>
+        <rect width="280" height="160" rx="2" fill="none" stroke="#c0c0c0" stroke-width="0.8"/>
+        
+        <!-- Fold line across the middle -->
+        <line x1="0" y1="80" x2="280" y2="80" stroke="#b0b0b0" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+
+        <!-- Header block of IRCTC layout -->
+        <rect x="15" y="12" width="250" height="20" fill="#f0f4f8"/>
+        <rect x="25" y="18" width="80" height="4" fill="#1a3a70" opacity="0.7"/>
+        <rect x="25" y="24" width="40" height="3" fill="#1a3a70" opacity="0.5"/>
+
+        <!-- Passenger text details -->
+        <rect x="15" y="42" width="180" height="5" fill="#2a1c0e" opacity="0.5"/>
+        <rect x="15" y="52" width="120" height="4" fill="#2a1c0e" opacity="0.35"/>
+        
+        <rect x="15" y="66" width="140" height="4" fill="#2a1c0e" opacity="0.4"/>
+        <rect x="15" y="74" width="90" height="3" fill="#8a7050" opacity="0.3"/>
+
+        <!-- Lower half page details -->
+        <rect x="15" y="94" width="200" height="4" fill="#2a1c0e" opacity="0.3"/>
+        <rect x="15" y="104" width="150" height="4" fill="#2a1c0e" opacity="0.3"/>
+
+        <!-- Micro QR Code on receipt bottom right -->
+        <rect x="220" y="110" width="30" height="30" fill="#e2e5e9"/>
+        <rect x="223" y="113" width="6" height="6" fill="#2a1c0e" opacity="0.8"/>
+        <rect x="241" y="113" width="6" height="6" fill="#2a1c0e" opacity="0.8"/>
+        <rect x="223" y="131" width="6" height="6" fill="#2a1c0e" opacity="0.8"/>
+        <rect x="233" y="123" width="4" height="4" fill="#2a1c0e" opacity="0.8"/>
+
+        <!-- Glossy Glare overlay representing bright light reflection -->
+        <polygon points="0,0 120,0 60,160 0,160" fill="url(#glare-grad)"/>
+      </g>
+    </svg>
+  </div>
+
+  <p>Vishal hung up and pressed the folded paper receipt flat against his chest. It felt like holding his entire future against his own heartbeat. That evening he was assigned his last shift on the construction crew—a final inspection of the external maintenance platform on the eighty-first floor before the building was handed over.</p>
+
+  <div class="page-stamp"><span>The Dream</span><span>III</span></div>
+</div>
+
+<!-- ══════════ SECTION 4 (SELECTIVE DARK SHEET FOR HEIGHT) ══════════ -->
+<div class="page page-dark no-dropcap">
+  <div class="chapter-head">
+    <p class="chapter-num" style="color: var(--rust) !important;">IV</p>
+    <h2 class="chapter-title">The Sky and the Void</h2>
+    <div class="chapter-rule" style="background: var(--rust) !important;"></div>
+  </div>
+
+  <p>The wind at eighty stories was different. It did not blow; it roared. Something alive and furious, with no patience for the small human logic of safety harnesses and bolted platforms.</p>
+
+  <p>Vishal stepped out onto the narrow external ledge. Mumbai lay below him in full ceremony—a glowing map of blue, white, and sodium-orange light. Far in the distance, the curved black line of the sea. He stood at the edge facing north, imagining Radha already packing her tin suitcase. Imagining her face when she saw all of this for the first time.</p>
+
+  <p>He pulled his harness tight. The metal hook was wet from a light drizzle. His hands were cold from the altitude.</p>
+
+  <div class="section-marker"><span>—</span></div>
+
+  <p>We do not know if it was the loose bolt on the temporary anchor cleat, or if the wet metal slip made his boot lose its grip on the slick concrete ledge. There was no loud noise. Only the sudden, violent snap of a thin nylon rope against the concrete edge—the quiet sound of a knot failing.</p>
+
+  <p>The wind caught his blue plastic helmet, sending it spinning out into the void. Vishal fell. He fell through the eighty stories he had spent a year building, through the grey fog, down through the distance between the life he had made and the life he had promised.</p>
+
+  <p>In his shirt pocket, pressed flat against his chest, the printed paper of her e-ticket receipt remained dry and untouched.</p>
+
+  <!-- SVG IV: Realistic View from the top floor with golden highlights -->
+  <div class="scene-art" style="box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid #1c130d;">
+    <svg viewBox="0 0 640 360" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; display: block;">
+      <defs>
+        <radialGradient id="sky-dark-void" cx="50%" cy="40%" r="70%">
+          <stop offset="0%" stop-color="#0e1524"/>
+          <stop offset="65%" stop-color="#04070f"/>
+          <stop offset="100%" stop-color="#010204"/>
+        </radialGradient>
+        <radialGradient id="necklace-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffd070" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#ffd070" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <!-- Night Sky -->
+      <rect width="640" height="360" fill="url(#sky-dark-void)"/>
+      <circle cx="70" cy="50" r="0.8" fill="#fff" opacity="0.4"/>
+      <circle cx="310" cy="70" r="0.8" fill="#fff" opacity="0.3"/>
+      <circle cx="560" cy="40" r="1" fill="#fff" opacity="0.4"/>
+
+      <!-- Queen's Necklace gold curve below -->
+      <ellipse cx="320" cy="290" rx="220" ry="12" fill="url(#necklace-glow)" pointer-events="none"/>
+      <path d="M 60,340 Q 200,290 320,285 Q 440,290 580,340" stroke="#ffd070" stroke-width="2.5" fill="none" opacity="0.4"/>
+      <path d="M 60,340 Q 200,290 320,285 Q 440,290 580,340" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.7"/>
+      
+      <!-- Twinkling points of Mumbai's coast -->
+      <g fill="#ffe090" opacity="0.9">
+        <circle cx="120" cy="318" r="2.2"/>
+        <circle cx="180" cy="305" r="1.8"/>
+        <circle cx="260" cy="295" r="2.2"/>
+        <circle cx="320" cy="290" r="1.8"/>
+        <circle cx="380" cy="293" r="2.2"/>
+        <circle cx="440" cy="303" r="1.8"/>
+        <circle cx="510" cy="318" r="2.2"/>
+      </g>
+
+      <!-- Wet Concrete Ledge with SPECULAR RIM HIGHLIGHTS -->
+      <polygon points="0,180 220,170 235,360 0,360" fill="#080605"/>
+      <polygon points="0,180 220,170 222,174 0,185" fill="#faf6ef" opacity="0.5"/>
+
+      <!-- Safety hook post -->
+      <rect x="90" y="160" width="8" height="42" fill="#140f0c" rx="1"/>
+      <line x1="90" y1="160" x2="90" y2="202" stroke="#faf6ef" stroke-width="0.8" opacity="0.4"/>
+      <path d="M 90,165 Q 85,155 76,158" stroke="#140f0c" stroke-width="8" fill="none" stroke-linecap="round"/>
+      
+      <!-- Broken orange line swinging -->
+      <path d="M 92,185 Q 98,192 108,205" stroke="#a93c15" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+      <path d="M 92,185 Q 98,192 108,205" stroke="#ff825c" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.4"/>
+      
+      <!-- Falling helmet -->
+      <g transform="translate(480, 240) rotate(-20)">
+        <path d="M -18,0 Q -18,-12 0,-15 Q 18,-12 18,0 Z" fill="#184275"/>
+        <path d="M -18,0 Q -18,-12 0,-15" stroke="#71a2db" stroke-width="1" fill="none" opacity="0.5"/>
+        <path d="M -22,0 Q 0,8 22,0" stroke="#184275" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </div>
+
+  <p>Radha's train arrived at Chhatrapati Shivaji Maharaj Terminus on Tuesday morning, on time. She stood on Platform 8 for four hours, holding her small tin suitcase in both hands, waiting for a husband who had gone too high to ever come down.</p>
+
+  <div class="page-footer">
+    <span>The Dream</span>
+    <span>IV</span>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 5 (LIGHT PAPER GLOSSARY) ══════════ -->
+<div class="page">
+  <div class="chapter-head">
+    <p class="chapter-num">Appendix</p>
+    <h2 class="chapter-title">The Cost of the Dream</h2>
+    <div class="chapter-rule"></div>
+  </div>
+
+  <div class="glossary-item">
+    <h3 class="glossary-term">The Invisible Builder</h3>
+    <span class="glossary-subtitle">The High-Rise Paradox</span>
+    <p class="glossary-definition no-dropcap">The building is complete, but the person who built it is not inside it. Vishal spent a year carrying polished marble and frameless glass up eighty stories, learning the weight of a luxury he was building for someone else. This is not an exception in Mumbai's skyline. It is the rule—and the rule has no clause for the builder's safety.</p>
+  </div>
+
+  <div class="glossary-item">
+    <h3 class="glossary-term">The Digital Gap</h3>
+    <span class="glossary-subtitle">WhatsApp Without a Home</span>
+    <p class="glossary-definition no-dropcap">In 2026, mobile access is universal, but structural progress remains uneven. Radha can text and view high-resolution videos of her husband's work directly on her phone, yet she still lacks a bank account. The flow of emotional news is instant, but the flow of physical funds must still rely on a male relative traveling to town. It is a world where people are digitally close but structurally isolated.</p>
+  </div>
+
+  <div class="glossary-item">
+    <h3 class="glossary-term">The Sky-Trap</h3>
+    <span class="glossary-subtitle">The Vertical Promotion</span>
+    <p class="glossary-definition no-dropcap">In the city's logic, elevation is progress. A better job is always higher up—higher salary, higher floor, higher risk. Vishal's promotion didn't come with better equipment. It came with more altitude and a thinner rope. The city rewards ambition with proximity to the edge, and does not distinguish between a man rising and a man falling until one of them has already happened.</p>
+  </div>
+
+  <div class="page-stamp"><span>The Dream</span><span>Appendix</span></div>
+</div>
+
+<!-- ══════════ EPILOGUE (DARK SCREEN OUTRO) ══════════ -->
+<div class="epilogue">
+  <p class="epi-title">Epilogue</p>
+  <p>Outside, Lower Parel runs its evening shift without a pause. The eighty-story tower stands complete, its glass panels catching the last of the sunset and throwing it back at the city in long, gold sheets. On the eighty-first floor, the new owners sit in their air-conditioned rooms, looking down at the miniature world below—clean, organized, manageable from this height.</p>
+
+  <p>They do not know what Ramesh bhaiya had to do on Tuesday evening, when the supervisor finally found his number on Vishal's emergency scrap note. They do not know what words he had to find, in Hindi, standing outside a tea stall in the market town, to tell a woman sitting on her tin suitcase at a Mumbai railway platform to go back home. They do not know about the blue saree, or the bus stop in Bihar, or the particular sound of a city that keeps building long after the person who built it is gone.</p>
+
+  <p>Radha has returned to the village. She still sits near the bus stop on Sunday evenings, her screen glowing in her palm, looking at a chat thread she does not yet have the heart to delete. The building stands. The city keeps going up.</p>
+  <div class="epi-close">∿</div>
+</div>
+
+</div><!-- end wrapper -->
+</body>
+</html>
+
+```
